@@ -3,12 +3,13 @@
 // ===================================
 
 // CAMBIA ESTA FECHA A LA FECHA OBJETIVO (Año, Mes-1, Día, Hora, Minuto, Segundo)
-const TARGET_DATE = new Date(2026, 5, 1, 2, 0, 0).getTime(); // 15 de Junio de 2026
+const TARGET_DATE = new Date(2026, 4, 1, 2, 0, 0).getTime(); // 15 de Junio de 2026
 
 // CAMBIA ESTE ID POR EL ID DE TU VIDEO DE YOUTUBE
 // Ejemplo: si tu video es https://www.youtube.com/watch?v=dQw4w9WgXcQ
 // El ID es: dQw4w9WgXcQ
-const YOUTUBE_VIDEO_ID = "K5Ni6Zh6MCY"; // Lofi hip hop - beats to relax/study to
+const YOUTUBE_VIDEO_ID = "K5Ni6Zh6MCY";
+//const YOUTUBE_VIDEO_ID = "K5Ni6Zh6MCY"; // Lofi hip hop - beats to relax/study to
 
 // ===================================
 // VARIABLES GLOBALES
