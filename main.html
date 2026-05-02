@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨ Colección de Cartas</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Cormorant+Garamond:wght@300;400;600;700&family=Playfair+Display:wght@400;600;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    
+    <!-- Fondo animado -->
+    <div class="background-animation"></div>
+    
+    <!-- Partículas doradas -->
+    <div id="golden-particles"></div>
+    
+    <!-- Encabezado -->
+    <header class="main-header">
+        <h1 class="header-title">
+            <span class="title-ornament">✦</span>
+            Colección de Memorias
+            <span class="title-ornament">✦</span>
+        </h1>
+        <p class="header-subtitle">Cada carta guarda un momento especial</p>
+    </header>
+    
+    <!-- Contenedor de cartas -->
+    <main class="cards-grid">
+        
+        <!-- Las cartas se generarán dinámicamente, pero aquí está la estructura -->
+        <!-- Las 23 cartas -->
+        
+    </main>
+    
+    <!-- Modal para mostrar la carta -->
+    <div id="card-modal" class="modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="envelope-container">
+            <div class="envelope">
+                <div class="envelope-flap"></div>
+                <div class="envelope-body"></div>
+                <div class="letter" id="letter-content">
+                    <iframe id="letter-iframe"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Controles de música -->
+    <div class="music-controls-main">
+        <button id="music-toggle-main" class="music-button-main">
+            <span class="music-icon-main">🎵</span>
+        </button>
+    </div>
+    
+    <!-- Reproductor de YouTube oculto -->
+    <div id="youtube-player-main"></div>
+
+    <script src="js/main.js"></script>
+    
+    <!-- API de YouTube -->
+    <script>
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    </script>
+    
+</body>
+</html>
