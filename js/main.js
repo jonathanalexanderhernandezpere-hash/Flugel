@@ -3,7 +3,7 @@
 // ===================================
 
 // ID del video de YouTube para la página principal
-const MAIN_YOUTUBE_VIDEO_ID = "K5Ni6Zh6MCY"; // Peaceful Piano Music
+const MAIN_YOUTUBE_VIDEO_ID = "4xDzrJKXOOY"; // Peaceful Piano Music
 
 // ===================================
 // VARIABLES GLOBALES
@@ -132,6 +132,9 @@ function openCard(number) {
     const modal = document.getElementById('card-modal');
     const envelope = modal.querySelector('.envelope');
     const iframe = document.getElementById('letter-iframe');
+    
+    // Bloquear scroll del body
+    document.body.classList.add('modal-open');
     
     // Cargar contenido de la carta
     iframe.src = `cartas/carta-${number}.html`;
@@ -269,6 +272,9 @@ function closeModal() {
     const envelope = modal.querySelector('.envelope');
     const iframe = document.getElementById('letter-iframe');
     
+    // Desbloquear scroll del body
+    document.body.classList.remove('modal-open');
+    
     modal.classList.remove('active');
     
     setTimeout(() => {
@@ -303,7 +309,11 @@ function saveCardsState(state) {
 function initGoldenParticles() {
     const container = document.getElementById('golden-particles');
     
-    for (let i = 0; i < 40; i++) {
+    // Reducir partículas en móviles para mejor rendimiento
+    const isMobile = window.innerWidth <= 768;
+    const particleCount = isMobile ? 20 : 40;
+    
+    for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
         particle.style.position = 'absolute';
         particle.style.width = Math.random() * 4 + 2 + 'px';
@@ -316,6 +326,7 @@ function initGoldenParticles() {
         particle.style.animation = `floatGolden ${Math.random() * 15 + 15}s linear infinite`;
         particle.style.animationDelay = Math.random() * 10 + 's';
         particle.style.opacity = Math.random() * 0.4 + 0.2;
+        particle.style.willChange = 'transform';
         
         container.appendChild(particle);
     }
@@ -343,4 +354,3 @@ particleStyle.textContent = `
     }
 `;
 document.head.appendChild(particleStyle);
-          
