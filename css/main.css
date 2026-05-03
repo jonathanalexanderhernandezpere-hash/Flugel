@@ -27,6 +27,12 @@ body {
     color: var(--cream);
 }
 
+body.modal-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+}
+
 /* Animación de fondo */
 .background-animation {
     position: fixed;
@@ -40,16 +46,15 @@ body {
         radial-gradient(circle at 50% 50%, rgba(74, 25, 66, 0.1) 0%, transparent 70%);
     animation: gradientShift 20s ease-in-out infinite;
     z-index: 0;
+    will-change: opacity;
 }
 
 @keyframes gradientShift {
     0%, 100% {
         opacity: 1;
-        transform: scale(1);
     }
     50% {
         opacity: 0.8;
-        transform: scale(1.1);
     }
 }
 
@@ -341,6 +346,7 @@ body {
     position: relative;
     width: 100%;
     height: 100%;
+    perspective: 2000px;
 }
 
 .envelope-flap {
@@ -353,10 +359,11 @@ body {
         var(--luxury-gold) 0%, 
         var(--deep-gold) 100%);
     clip-path: polygon(0 0, 100% 0, 50% 100%);
-    transform-origin: top center;
+    transform-origin: 50% 0%;
     transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-    z-index: 10;
+    z-index: 100;
+    will-change: transform;
 }
 
 .envelope.opening .envelope-flap {
@@ -374,20 +381,24 @@ body {
         var(--luxury-gold) 100%);
     border: 3px solid rgba(212, 175, 55, 0.5);
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    z-index: 5;
 }
 
 .letter {
     position: absolute;
-    top: 45%;
+    top: 50%;
     left: 5%;
     width: 90%;
-    height: 85%;
+    height: 80%;
     background: var(--cream);
     border-radius: 10px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-    transform: translateY(100%);
+    transform: translateY(60%);
     transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.5s;
-    overflow: hidden;
+    overflow: auto;
+    z-index: 50;
+    will-change: transform;
+    -webkit-overflow-scrolling: touch;
 }
 
 .envelope.opening .letter {
@@ -399,6 +410,7 @@ body {
     height: 100%;
     border: none;
     border-radius: 10px;
+    display: block;
 }
 
 /* Controles de música */
@@ -461,6 +473,11 @@ body {
 
 /* Responsive */
 @media (max-width: 768px) {
+    /* Desactivar animación de fondo en móviles para mejor rendimiento */
+    .background-animation {
+        animation: none;
+    }
+    
     .header-title {
         font-size: 2rem;
     }
@@ -486,5 +503,21 @@ body {
     .envelope-container {
         width: 95%;
         height: 85vh;
+    }
+    
+    .letter {
+        top: 52%;
+        left: 3%;
+        width: 94%;
+        height: 75%;
+    }
+    
+    /* Mejorar transiciones en móviles */
+    .envelope-flap {
+        transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .letter {
+        transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1) 0.4s;
     }
 }
