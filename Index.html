@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para Ti</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --sakura: #ffb7c5;
+    --sakura-deep: #e8829a;
+    --midnight: #0a0614;
+    --moonlight: #d4c9f0;
+    --gold: #c9a84c;
+    --gold-light: #f0d080;
+  }
+
+  body {
+    width: 100vw; height: 100vh;
+    overflow: hidden;
+    background: var(--midnight);
+    font-family: 'Cormorant Garamond', serif;
+    cursor: default;
+  }
+
+  /* ── PIXEL ART CANVAS ── */
+  #bg-canvas {
+    position: fixed; inset: 0;
+    image-rendering: pixelated;
+    z-index: 0;
+  }
+
+  /* ── MOON GLOW ── */
+  .moon {
+    position: fixed;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 40%, #fffbe8, #e8d8a0 40%, #b0a060 80%, transparent);
+    box-shadow: 0 0 60px 30px rgba(220,200,120,0.18), 0 0 120px 80px rgba(180,160,80,0.10);
+    top: 8%; left: 50%; transform: translateX(-50%);
+    z-index: 1;
+    animation: moonPulse 6s ease-in-out infinite;
+  }
+  @keyframes moonPulse {
+    0%,100% { box-shadow: 0 0 60px 30px rgba(220,200,120,0.18), 0 0 120px 80px rgba(180,160,80,0.10); }
+    50%      { box-shadow: 0 0 80px 50px rgba(220,200,120,0.28), 0 0 160px 100px rgba(180,160,80,0.15); }
+  }
+
+  /* ── PETALS ── */
+  .petal-container { position: fixed; inset: 0; z-index: 2; pointer-events: none; overflow: hidden; }
+  .petal {
+    position: absolute;
+    width: 8px; height: 6px;
+    background: var(--sakura);
+    border-radius: 50% 0 50% 0;
+    opacity: 0;
+    animation: fall linear infinite;
+    image-rendering: pixelated;
+  }
+  .petal::after {
+    content: '';
+    position: absolute;
+    width: 4px; height: 3px;
+    background: rgba(255,255,255,0.4);
+    border-radius: 50%;
+    top: 1px; left: 2px;
+  }
+  @keyframes fall {
+    0%   { transform: translateY(-20px) rotate(0deg) translateX(0); opacity: 0; }
+    10%  { opacity: 0.9; }
+    90%  { opacity: 0.7; }
+    100% { transform: translateY(110vh) rotate(720deg) translateX(60px); opacity: 0; }
+  }
+
+  /* ── PIXEL TREES (CSS) ── */
+  .pixel-trees { position: fixed; bottom: 0; width: 100%; z-index: 3; pointer-events: none; }
+
+  /* ── OVERLAY VIGNETTE ── */
+  .vignette {
+    position: fixed; inset: 0; z-index: 4;
+    background: radial-gradient(ellipse at center, transparent 30%, rgba(10,6,20,0.7) 100%);
+    pointer-events: none;
+  }
+
+  /* ── MAIN UI ── */
+  #ui {
+    position: fixed; inset: 0; z-index: 10;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 2rem;
+  }
+
+  .title-block { text-align: center; }
+  .title-block h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(1.8rem, 5vw, 3.5rem);
+    color: var(--moonlight);
+    text-shadow: 0 0 30px rgba(212,201,240,0.6), 0 0 60px rgba(212,201,240,0.3);
+    letter-spacing: 0.15em;
+    animation: titleGlow 4s ease-in-out infinite;
+  }
+  .title-block p {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--sakura);
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+    opacity: 0.85;
+  }
+  @keyframes titleGlow {
+    0%,100% { text-shadow: 0 0 30px rgba(212,201,240,0.6), 0 0 60px rgba(212,201,240,0.3); }
+    50%      { text-shadow: 0 0 50px rgba(212,201,240,0.9), 0 0 100px rgba(212,201,240,0.5); }
+  }
+
+  /* ── COUNTDOWN ── */
+  #countdown {
+    display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center;
+  }
+  .cd-box {
+    display: flex; flex-direction: column; align-items: center;
+    background: rgba(10,6,20,0.7);
+    border: 1px solid var(--gold);
+    padding: 1rem 1.5rem;
+    min-width: 80px;
+    position: relative;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  }
+  .cd-box::before {
+    content: '';
+    position: absolute; inset: 1px;
+    border: 1px solid rgba(201,168,76,0.3);
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  }
+  .cd-num {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 2.2rem;
+    color: var(--gold-light);
+    line-height: 1;
+    text-shadow: 0 0 20px rgba(240,208,128,0.5);
+  }
+  .cd-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+  }
+
+  /* ── LOCK MESSAGE ── */
+  #lock-msg {
+    font-style: italic;
+    color: var(--moonlight);
+    font-size: 1.1rem;
+    opacity: 0.7;
+    text-align: center;
+    max-width: 400px;
+    padding: 0 1rem;
+    line-height: 1.6;
+  }
+
+  /* ── BUTTON ── */
+  #enter-btn {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1rem;
+    letter-spacing: 0.2em;
+    color: var(--midnight);
+    background: linear-gradient(135deg, var(--gold), var(--gold-light), var(--gold));
+    border: none;
+    padding: 1rem 3rem;
+    cursor: pointer;
+    position: relative;
+    clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+    transition: all 0.3s;
+    display: none;
+  }
+  #enter-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(240,208,128,0.5);
+  }
+  #enter-btn.visible { display: block; animation: btnAppear 1s ease forwards; }
+  @keyframes btnAppear {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── MUSIC TOGGLE ── */
+  #music-btn {
+    position: fixed; bottom: 2rem; right: 2rem; z-index: 20;
+    background: rgba(10,6,20,0.8);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-size: 1.4rem;
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s;
+  }
+  #music-btn:hover { background: rgba(201,168,76,0.2); }
+
+  /* ── STARS ── */
+  .stars { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+  
+  
+  
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20%      { transform: translateX(-8px); }
+  40%      { transform: translateX(8px); }
+  60%      { transform: translateX(-5px); }
+  80%      { transform: translateX(5px); }
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+<div class="stars" id="stars"></div>
+<div class="moon"></div>
+<div class="petal-container" id="petals"></div>
+<canvas class="pixel-trees" id="trees-canvas" height="220"></canvas>
+<div class="vignette"></div>
+
+<div id="ui">
+  <div class="title-block">
+    <h1>Para Ti</h1>
+    <p>Un regalo que el tiempo guardó</p>
+  </div>
+
+  <div id="countdown">
+    <div class="cd-box"><span class="cd-num" id="cd-days">000</span><span class="cd-label">Días</span></div>
+    <div class="cd-box"><span class="cd-num" id="cd-hours">00</span><span class="cd-label">Horas</span></div>
+    <div class="cd-box"><span class="cd-num" id="cd-mins">00</span><span class="cd-label">Min</span></div>
+    <div class="cd-box"><span class="cd-num" id="cd-secs">00</span><span class="cd-label">Seg</span></div>
+  </div>
+
+  <p id="lock-msg">Este jardín aún guarda sus secretos.<br>Regresa cuando el momento sea el indicado.</p>
+
+  <!-- Bloque pregunta (oculto hasta que acabe la cuenta atrás) -->
+<div id="question-block" style="display:none; flex-direction:column; align-items:center; gap:1rem; width:100%; max-width:420px;">
+  <p id="question-text" style="
+    font-style:italic;
+    color:#f5edd8;
+    font-size:1.15rem;
+    text-align:center;
+    line-height:1.7;
+    opacity:0.9;
+    padding:0 1rem;
+  ">✦ ¿Como me agregaste en el Segundo número/p><!-- ← EDITA ESTE TEXTO -->
+
+  <input id="question-input" type="text" placeholder="Tu respuesta…" style="
+    width:100%;
+    background:rgba(10,5,20,0.8);
+    border:1px solid #8a6a20;
+    color:#f5edd8;
+    font-family:'Cormorant Garamond',serif;
+    font-size:1.1rem;
+    padding:0.8rem 1.2rem;
+    text-align:center;
+    outline:none;
+    letter-spacing:0.05em;
+    clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
+    transition:border-color 0.3s;
+  " onkeydown="if(event.key==='Enter') checkAnswer()"/>
+
+  <p id="answer-error" style="
+    color:#e8829a;
+    font-style:italic;
+    font-size:0.9rem;
+    min-height:1.2rem;
+    opacity:0;
+    transition:opacity 0.4s;
+  ">Esa no es la respuesta correcta…</p>
+
+  <button id="enter-btn" onclick="checkAnswer()" style="display:block">✦ Entrar ✦</button>
+</div>
+</div>
+
+<button id="music-btn" onclick="toggleMusic()" title="Música">♪</button>
+
+<!-- Reemplaza el src con tu canción (MP3 en tu repositorio o URL) -->
+<div id="yt-player" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;"></div>
+<script src="https://www.youtube.com/iframe_api"></script>
+
+<script>
+// ── COUNTDOWN TARGET ── Cambia esta fecha a la que desees
+const TARGET = new Date('2026-12-31T00:00:00');
+
+function updateCountdown() {
+  const now = new Date();
+  const diff = TARGET - now;
+  if (diff <= 0) {
+    document.getElementById('countdown').style.display = 'none';
+document.getElementById('lock-msg').style.display = 'none';
+document.getElementById('question-block').style.display = 'flex';
+setTimeout(() => document.getElementById('question-input').focus(), 100);
+    return;
+  }
+  const d = Math.floor(diff / 86400000);
+  const h = Math.floor((diff % 86400000) / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  const s = Math.floor((diff % 60000) / 1000);
+  document.getElementById('cd-days').textContent  = String(d).padStart(3,'0');
+  document.getElementById('cd-hours').textContent = String(h).padStart(2,'0');
+  document.getElementById('cd-mins').textContent  = String(m).padStart(2,'0');
+  document.getElementById('cd-secs').textContent  = String(s).padStart(2,'0');
+}
+setInterval(updateCountdown, 1000);
+updateCountdown();
+
+// ── STARS ──
+const starsDiv = document.getElementById('stars');
+for (let i = 0; i < 200; i++) {
+  const s = document.createElement('div');
+  const size = Math.random() < 0.8 ? 1 : 2;
+  s.style.cssText = `
+    position:absolute;
+    width:${size}px;height:${size}px;
+    background:#fff;
+    border-radius:50%;
+    top:${Math.random()*70}%;
+    left:${Math.random()*100}%;
+    opacity:${0.3+Math.random()*0.7};
+    animation: twinkle ${2+Math.random()*4}s ease-in-out ${Math.random()*4}s infinite;
+  `;
+  starsDiv.appendChild(s);
+}
+const style = document.createElement('style');
+style.textContent = `@keyframes twinkle{0%,100%{opacity:0.2}50%{opacity:1}}`;
+document.head.appendChild(style);
+
+// ── PETALS ──
+const petalContainer = document.getElementById('petals');
+const colors = ['#ffb7c5','#ffc8d4','#ff9eb0','#ffe0e8','#f8a0b8'];
+for (let i = 0; i < 35; i++) {
+  const p = document.createElement('div');
+  p.className = 'petal';
+  p.style.cssText = `
+    left:${Math.random()*110-5}%;
+    background:${colors[Math.floor(Math.random()*colors.length)]};
+    width:${6+Math.random()*6}px;
+    height:${4+Math.random()*5}px;
+    animation-duration:${8+Math.random()*14}s;
+    animation-delay:${Math.random()*12}s;
+    transform: rotate(${Math.random()*360}deg);
+  `;
+  petalContainer.appendChild(p);
+}
+
+// ── PIXEL TREES ──
+const tc = document.getElementById('trees-canvas');
+tc.width = window.innerWidth;
+const ctx = tc.getContext('2d');
+ctx.imageSmoothingEnabled = false;
+
+function drawPixelTree(x, y, scale, dark) {
+  const s = scale;
+  const trunk = dark ? '#2a1a2e' : '#3d2b1f';
+  const bark  = dark ? '#1a0d1e' : '#2a1a10';
+  const blossom1 = dark ? '#c07090' : '#d4a0b0';
+  const blossom2 = dark ? '#e090b0' : '#ffb7c5';
+  const blossom3 = dark ? '#a05070' : '#c08090';
+
+  // trunk
+  ctx.fillStyle = trunk;
+  ctx.fillRect(x, y - 80*s, 6*s, 80*s);
+  ctx.fillStyle = bark;
+  ctx.fillRect(x+s, y-70*s, 2*s, 60*s);
+
+  // branches pixel clusters
+  const blossoms = [
+    {ox:-20,oy:-110,c:blossom1},{ox:-10,oy:-120,c:blossom2},
+    {ox:0,oy:-130,c:blossom2},{ox:10,oy:-120,c:blossom1},
+    {ox:20,oy:-110,c:blossom3},{ox:-30,oy:-95,c:blossom3},
+    {ox:30,oy:-95,c:blossom1},{ox:-15,oy:-140,c:blossom2},
+    {ox:15,oy:-140,c:blossom1},{ox:0,oy:-148,c:blossom2},
+    {ox:-25,oy:-108,c:blossom2},{ox:25,oy:-108,c:blossom3},
+  ];
+  blossoms.forEach(b => {
+    ctx.fillStyle = b.c;
+    ctx.fillRect(x + b.ox*s, y + b.oy*s, 14*s, 14*s);
+    ctx.fillStyle = 'rgba(255,255,255,0.15)';
+    ctx.fillRect(x + b.ox*s + s, y + b.oy*s + s, 4*s, 4*s);
+  });
+}
+
+function renderTrees() {
+  tc.width = window.innerWidth;
+  ctx.clearRect(0, 0, tc.width, tc.height);
+  const treeData = [
+    {x:0.05, s:0.9},{x:0.18, s:1.1},{x:0.32, s:0.85},
+    {x:0.48, s:1.0},{x:0.62, s:1.15},{x:0.75, s:0.9},
+    {x:0.88, s:1.05},{x:0.97, s:0.8},
+  ];
+  treeData.forEach(t => drawPixelTree(tc.width*t.x, 220, t.s, true));
+}
+renderTrees();
+window.addEventListener('resize', renderTrees);
+
+// ── MUSIC ──
+let ytPlayer = null;
+let musicPlaying = false;
+
+window.onYouTubeIframeAPIReady = function () {
+  ytPlayer = new YT.Player('yt-player', {
+    videoId: '1rwAvUvvQzQ', // ← ID del vídeo de YouTube para la entrada
+    playerVars: { autoplay: 0, controls: 0, loop: 1, playlist: '1rwAvUvvQzQ' },
+    events: { onReady: () => { ytPlayer.setVolume(40); } }
+  });
+};
+
+function toggleMusic() {
+  if (!ytPlayer) return;
+  const btn = document.getElementById('music-btn');
+  if (musicPlaying) {
+    ytPlayer.pauseVideo();
+    btn.textContent = '♪';
+    musicPlaying = false;
+  } else {
+    ytPlayer.playVideo();
+    btn.textContent = '■';
+    musicPlaying = true;
+  }
+}
+
+document.addEventListener('click', () => {
+  if (!musicPlaying && ytPlayer) {
+    ytPlayer.playVideo();
+    musicPlaying = true;
+    document.getElementById('music-btn').textContent = '■';
+  }
+}, { once: true });
+
+// ── RESPUESTA SECRETA ── (cambia solo esta línea)
+const SECRET = 'esposito'; // ← en minúsculas, sin tildes si prefieres
+
+function checkAnswer() {
+  const input = document.getElementById('question-input').value.trim().toLowerCase();
+  const error = document.getElementById('answer-error');
+
+  if (input === SECRET) {
+    // Respuesta correcta → entrar
+    document.getElementById('question-block').style.opacity = '0';
+    document.getElementById('question-block').style.transition = 'opacity 0.6s';
+    setTimeout(() => { window.location.href = 'menu.html'; }, 600);
+  } else {
+    // Respuesta incorrecta → shake + mensaje
+    error.style.opacity = '1';
+    const inp = document.getElementById('question-input');
+    inp.style.borderColor = '#e8829a';
+    inp.style.animation = 'shake 0.4s ease';
+    setTimeout(() => {
+      inp.style.animation = '';
+      inp.style.borderColor = '#8a6a20';
+    }, 500);
+  }
+}
+</script>
+</body>
+</html>
+
