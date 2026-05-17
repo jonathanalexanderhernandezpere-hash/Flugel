@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carta · Para Ti</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg:       #07050f;
+    --parchment:#f5edd8;
+    --parch2:   #ede0c4;
+    --parch3:   #d4c4a0;
+    --ink:      #1a1208;
+    --gold:     #c9a84c;
+    --gold-l:   #f0d080;
+    --gold-d:   #8a6a20;
+    --burgundy: #5c1a2e;
+    --burg2:    #3d1020;
+    --sakura:   #e8829a;
+    --shadow:   rgba(10,5,25,0.6);
+  }
+
+  body {
+    min-height: 100vh;
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse at 50% -10%, rgba(92,26,46,0.3) 0%, transparent 60%),
+      radial-gradient(ellipse at 0% 100%, rgba(40,15,60,0.4) 0%, transparent 50%);
+    font-family: 'Cormorant Garamond', serif;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 2rem 1rem 4rem;
+  }
+
+  /* ── TOP NAV ── */
+  nav {
+    width: 100%; max-width: 720px;
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 2rem;
+  }
+  .nav-btn {
+    background: none;
+    border: 1px solid var(--gold-d);
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    padding: 0.5rem 1.2rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s;
+    clip-path: polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);
+  }
+  .nav-btn:hover { background: rgba(201,168,76,0.15); border-color: var(--gold); }
+  .nav-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    color: var(--gold-d);
+    text-transform: uppercase;
+  }
+
+  /* ── LETTER FRAME ── */
+  .letter-wrap {
+    width: 100%; max-width: 720px;
+    position: relative;
+  }
+
+  /* Outer decorative border */
+  .letter-frame {
+    background: linear-gradient(135deg, var(--burgundy) 0%, var(--burg2) 50%, var(--burgundy) 100%);
+    padding: 3px;
+    position: relative;
+  }
+  .letter-frame::before {
+    content: '';
+    position: absolute; inset: 6px;
+    border: 1px solid rgba(201,168,76,0.3);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Corner ornaments */
+  .corner {
+    position: absolute;
+    width: 40px; height: 40px;
+    z-index: 2;
+  }
+  .corner svg { width: 40px; height: 40px; }
+  .corner-tl { top: -2px;  left: -2px; }
+  .corner-tr { top: -2px;  right: -2px; transform: scaleX(-1); }
+  .corner-bl { bottom: -2px; left: -2px; transform: scaleY(-1); }
+  .corner-br { bottom: -2px; right: -2px; transform: scale(-1); }
+
+  /* Parchment */
+  .letter-body {
+    background: var(--parchment);
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.06'/%3E%3C/svg%3E"),
+      radial-gradient(ellipse at 30% 30%, rgba(255,255,240,0.4) 0%, transparent 60%),
+      linear-gradient(180deg, var(--parchment) 0%, var(--parch2) 100%);
+    padding: 3.5rem 4rem;
+    min-height: 60vh;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 0 60px rgba(160,130,80,0.15);
+  }
+
+  /* Ink bleed lines */
+  .letter-body::before {
+    content: '';
+    position: absolute;
+    left: 3.5rem; top: 0; bottom: 0;
+    width: 1px;
+    background: rgba(200,150,120,0.3);
+  }
+
+  /* Letter header */
+  .letter-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(160,130,80,0.4);
+    position: relative;
+  }
+  .letter-header::after {
+    content: '⚜';
+    position: absolute; bottom: -0.7rem; left: 50%;
+    transform: translateX(-50%);
+    background: var(--parchment);
+    background-image: radial-gradient(ellipse, var(--parch2), var(--parchment));
+    padding: 0 0.5rem;
+    color: var(--gold-d);
+    font-size: 1rem;
+  }
+  .letter-num-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--gold-d);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .letter-num {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 2.5rem;
+    color: var(--burgundy);
+    line-height: 1;
+  }
+
+  /* Letter text */
+  .letter-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    line-height: 2;
+    color: var(--ink);
+    font-weight: 300;
+  }
+  .letter-text p { margin-bottom: 1.2rem; text-indent: 2em; }
+  .letter-text p:first-child::first-letter {
+    font-size: 3rem;
+    font-family: 'Cinzel Decorative', serif;
+    float: left;
+    line-height: 0.75;
+    margin: 0.1rem 0.3rem 0 0;
+    color: var(--burgundy);
+  }
+
+  /* Signature */
+  .letter-signature {
+    margin-top: 3rem;
+    text-align: right;
+    font-style: italic;
+    color: var(--burg2);
+    font-size: 1.2rem;
+    border-top: 1px solid rgba(160,130,80,0.3);
+    padding-top: 1.5rem;
+  }
+  .signature-name {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.3rem;
+    display: block;
+    margin-top: 0.5rem;
+    color: var(--burgundy);
+  }
+
+  /* ── READING TIMER ── */
+  #timer-wrap {
+    width: 100%; max-width: 720px;
+    margin-top: 2rem;
+    display: flex; flex-direction: column; align-items: center; gap: 1rem;
+  }
+  .timer-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    color: var(--gold-d);
+    text-transform: uppercase;
+  }
+  .timer-bar-outer {
+    width: 100%;
+    height: 4px;
+    background: rgba(201,168,76,0.15);
+    border: 1px solid rgba(201,168,76,0.2);
+    position: relative;
+    overflow: hidden;
+  }
+  .timer-bar-inner {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--gold-d), var(--gold-l));
+    transition: width 0.5s linear;
+    box-shadow: 0 0 8px rgba(240,208,128,0.4);
+  }
+  #timer-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: rgba(245,237,216,0.5);
+    font-size: 0.9rem;
+  }
+
+  /* ── UNLOCK BUTTON ── */
+  #unlock-btn {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.9rem;
+    letter-spacing: 0.15em;
+    color: var(--ink);
+    background: linear-gradient(135deg, var(--gold), var(--gold-l), var(--gold));
+    border: none;
+    padding: 1rem 2.5rem;
+    cursor: pointer;
+    clip-path: polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%);
+    transition: all 0.3s;
+    display: none;
+    margin-top: 0.5rem;
+  }
+  #unlock-btn.show { display: block; animation: appear 0.8s ease forwards; }
+  #unlock-btn:hover { transform: scale(1.04); box-shadow: 0 0 25px rgba(240,208,128,0.4); }
+  @keyframes appear { from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)} }
+
+  /* ── MUSIC ── */
+  #music-player {
+    width: 100%; max-width: 720px;
+    margin-top: 1.5rem;
+    background: rgba(10,5,20,0.8);
+    border: 1px solid var(--gold-d);
+    padding: 1rem 1.5rem;
+    display: flex; align-items: center; gap: 1rem;
+    clip-path: polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%);
+  }
+  .music-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--gold);
+    flex: 1;
+    font-size: 0.95rem;
+  }
+  .music-btn-sm {
+    background: none; border: 1px solid var(--gold-d);
+    color: var(--gold);
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    cursor: pointer; font-size: 1rem;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s; flex-shrink: 0;
+  }
+  .music-btn-sm:hover { background: rgba(201,168,76,0.2); border-color: var(--gold); }
+
+  /* Mobile adjustments */
+  @media (max-width: 600px) {
+    .letter-body { padding: 2rem 1.5rem; }
+    .letter-body::before { left: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="menu.html" class="nav-btn">← Menú</a>
+  <span class="nav-title" id="nav-num">Carta I</span>
+  <button class="nav-btn" id="nav-next" style="display:none" onclick="goNext()">Siguiente →</button>
+</nav>
+
+<div class="letter-wrap">
+  <!-- Corner SVG ornaments -->
+  <div class="corner corner-tl">
+    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 38 L2 2 L38 2" stroke="#c9a84c" stroke-width="1.5" fill="none"/>
+      <path d="M2 38 L2 20 C2 10 10 2 20 2" stroke="#8a6a20" stroke-width="0.5" fill="none"/>
+      <circle cx="2" cy="2" r="2" fill="#c9a84c"/>
+      <circle cx="21" cy="21" r="1.5" fill="#8a6a20"/>
+    </svg>
+  </div>
+  <div class="corner corner-tr">
+    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 38 L2 2 L38 2" stroke="#c9a84c" stroke-width="1.5" fill="none"/>
+      <path d="M2 38 L2 20 C2 10 10 2 20 2" stroke="#8a6a20" stroke-width="0.5" fill="none"/>
+      <circle cx="2" cy="2" r="2" fill="#c9a84c"/>
+    </svg>
+  </div>
+  <div class="corner corner-bl">
+    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 38 L2 2 L38 2" stroke="#c9a84c" stroke-width="1.5" fill="none"/>
+      <circle cx="2" cy="38" r="2" fill="#c9a84c"/>
+    </svg>
+  </div>
+  <div class="corner corner-br">
+    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 38 L2 2 L38 2" stroke="#c9a84c" stroke-width="1.5" fill="none"/>
+      <circle cx="2" cy="38" r="2" fill="#c9a84c"/>
+    </svg>
+  </div>
+
+  <div class="letter-frame">
+    <div class="letter-body">
+      <div class="letter-header">
+        <div class="letter-num-label">Carta</div>
+        <div class="letter-num" id="letter-num-display">I</div>
+      </div>
+
+      <div class="letter-text" id="letter-content">
+        <!-- Content injected by JS -->
+      </div>
+
+      <div class="letter-signature">
+        Con todo mi amor,
+        <span class="signature-name" id="letter-from">Con cariño</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Reading timer -->
+<div id="timer-wrap">
+  <span class="timer-label" id="timer-label">Lee la carta con calma…</span>
+  <div class="timer-bar-outer">
+    <div class="timer-bar-inner" id="timer-bar"></div>
+  </div>
+  <span id="timer-text">Tiempo de lectura: 0 seg</span>
+  <button id="unlock-btn" onclick="unlockNext()">✦ Desbloquear la siguiente carta ✦</button>
+</div>
+
+<!-- Individual music player -->
+<div id="music-player">
+  <button class="music-btn-sm" id="play-btn" onclick="toggleMusic()">▶</button>
+  <span class="music-title" id="song-title">Melodía de la carta</span>
+  <div id="yt-container" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;">
+    <div id="yt-player"></div>
+  </div>
+</div>
+
+
+
+<script>
+// ── LETTER DATA ──
+// Edita aquí el contenido de cada carta
+const LETTERS = {
+  1: {
+    content: `<p>Hoy decidí que habría palabras que solo el papel podría guardar. No el aire, que las dispersa; no la voz, que tiembla. Solo el papel y la tinta.</p>
+              <p>Si estás leyendo esto, significa que el tiempo llegó. Significa que todo aquello que imaginé desde el momento en que pensé en ti, finalmente tiene un destino.</p>
+              <p>Esta es la primera de veintitrés cartas. No las leas de prisa. Deja que cada una viva en ti un momento antes de pasar a la siguiente.</p>
+              <p>Porque cada una fue escrita con un pedazo de algo que no sé si tiene nombre.</p>`,
+    from: 'Quien piensa en ti',
+    yt: 'TU_ID_DE_YOUTUBE',
+    songTitle: 'I · Obertura'
+  },
+  2: {
+    content: `<p>Hay cosas que uno aprende demasiado tarde. Que el silencio también habla, que la distancia no es la ausencia, que algunas personas llegan con la intención secreta de quedarse.</p>
+              <p>Tú fuiste así. No anunciaste nada. Solo apareciste un día y el mundo cambió de color sin que yo lo notara al instante.</p>
+              <p>Esta segunda carta es para ese momento. Para el instante exacto en que algo, dentro de mí, dijo: <em>esta persona importa</em>.</p>
+              <p>Y tenía razón.</p>`,
+    from: 'Quien piensa en ti',
+    song: 'music/carta_02.mp3',
+    songTitle: 'II · El primer instante'
+  },
+  3: {
+    content: `<p>¿Sabes lo difícil que es encontrar las palabras correctas para algo que todavía no entiende bien ni quien lo escribe?</p>
+              <p>Quizás por eso tardé tanto. No en sentirlo, sino en atreverme a nombrarlo. Como si decirlo en voz alta lo volviera real, y lo real pudiera romperse.</p>
+              <p>Pero aquí está. En este papel que no juzga ni interrumpe ni mira diferente.</p>
+              <p>Aquí está, para ti.</p>`,
+    from: 'Quien piensa en ti',
+    song: 'music/carta_03.mp3',
+    songTitle: 'III · Confesión'
+  },
+  4: {
+    content: `<p>Una vez leí que las personas que nos cambian la vida rara vez saben que lo hicieron. Que van por el mundo sin sospechar el peso de sus palabras, de sus gestos pequeños, de sus miradas al pasar.</p>
+              <p>Tú perteneces a ese tipo de personas. Lo sé con certeza.</p>
+              <p>Esta carta es para decirte que sí lo noté. Que cada pequeña cosa que hiciste o dijiste, aterrizó en algún lugar dentro de mí donde aún resuena.</p>`,
+    from: 'Quien piensa en ti',
+    song: 'music/carta_04.mp3',
+    songTitle: 'IV · Resonancia'
+  },
+  5: {
+    content: `<p>Hay días en los que el mundo parece enorme y el ruido no para. Días en que uno quisiera un lugar tranquilo donde no tener que explicar nada a nadie.</p>
+              <p>Pensé en ti en uno de esos días. Y extraño que siempre, al pensarte, algo se calma.</p>
+              <p>No sé si eso es magia o simplemente lo que sienten quienes tienen la suerte de conocer a alguien como tú.</p>
+              <p>Gracias por ser ese lugar.</p>`,
+    from: 'Quien piensa en ti',
+    song: 'music/carta_05.mp3',
+    songTitle: 'V · Calma'
+  },
+  6: {
+    content: `<p>Esta carta la escribí de noche. Hay algo en la oscuridad que vuelve más honesto a quien escribe.</p>
+              <p>De noche no hay máscaras que ponerse ni versiones distintas de uno mismo que sostener. Solo uno, la luz de una lámpara, y la verdad.</p>
+              <p>Y la verdad esta noche es simple: pienso en ti más de lo que imaginas.</p>`,
+    from: 'Quien piensa en ti',
+    song: 'music/carta_06.mp3',
+    songTitle: 'VI · Nocturnos'
+  },
+  7: {
+    content: `<p>Me pregunto si alguna vez has sentido que una conversación contigo misma te resulta incompleta. Que algo falta. Que hay una voz que quisieras escuchar y que aún no ha llegado.</p>
+              <p>Yo la siento así. Como una pregunta que camina sola por los pasillos de lo que pienso.</p>
+              <p>Y la respuesta, casi siempre, tienes tu nombre.</p>`,
+    from: 'Quien piensa en ti',
+    song: 'music/carta_07.mp3',
+    songTitle: 'VII · La pregunta'
+  },
+  8: {
+    content: `<p>Ocho cartas. No sé si eso es mucho o poco para decir lo que quiero decir.</p>
+              <p>Lo que sé es que cada una ha sido un intento. Un acercamiento. Como quien construye un puente piedra por piedra sin saber si el otro lado tiene quien espere.</p>
+              <p>Sigo construyendo. Con paciencia. Con esperanza.</p>
+              <p>Con la certeza de que vale la pena.</p>`,
+    from: 'Quien piensa en ti',
+    song: 'music/carta_08.mp3',
+    songTitle: 'VIII · El puente'
+  },
+  9: {
+    content: `<p>Hay una pregunta que me hago a veces: ¿qué hubiese pasado si nunca te hubiera conocido?</p>
+              <p>La respuesta me deja con un silencio extraño. Un silencio que dice que habría algo faltando aunque no supiera qué.</p>
+              <p>Qué suerte, entonces, que el destino o el azar o como queramos llamarlo, decidió lo contrario.</p>`,
+    from: 'Quien piensa en ti',
+    song: 'music/carta_09.mp3',
+    songTitle: 'IX · El azar'
+  },
+  10: {
+    content: `<p>La décima carta. Llegamos al número que los humanos usamos para celebrar. Diez años, diez versiones, diez razones.</p>
+              <p>Aquí van diez palabras para ti: <em>Eres de las personas que hacen mejor el mundo.</em></p>
+              <p>Apenas diez. Pero son ciertas.</p>`,
+    from: 'Quien piensa en ti',
+    song: 'music/carta_10.mp3',
+    songTitle: 'X · Celebración'
+  },
+  11: {
+    content: `<p>Escribir esto se ha vuelto un ritual. Busco el momento justo, el silencio adecuado, las palabras que aún no han sido dichas de esta manera.</p>
+              <p>Y siempre encuentro algo nuevo. Algo que todavía no había puesto en palabras sobre lo que siento.</p>
+              <p>Como si hubiera un pozo de cosas por decirte que no tiene fondo visible.</p>`,
+    from: 'Quien piensa en ti',
+    song: 'music/carta_11.mp3',
+    songTitle: 'XI · El pozo'
+  },
+  12: {
+    content: `<p>A la mitad del camino, esta carta.</p>
+              <p>Doce de veintitrés. Justo en el centro de algo que espero que al llegar al final tenga el peso que merece.</p>
+              <p>Si has llegado hasta aquí, gracias. Por la paciencia. Por quedarte. Por leer cada palabra con el cuidado que imagino que lo haces.</p>`,
+    from: 'Quien piensa en ti',
+    song: 'music/carta_12.mp3',
+    songTitle: 'XII · La mitad'
+  },
+  13: {
+    content: `<p>Trece. El número que los supersticiosos evitan. Yo lo elijo para decirte que no hay nada en esta historia que me dé miedo.</p>
+              <p>Ni el tiempo, ni la distancia, ni las palabras que aún no encuentro. Nada.</p>
+              <p>Solo el silencio de no haberlo dicho.</p>`,
+    from: 'Quien piensa en ti',
+    song: 'music/carta_13.mp3',
+    songTitle: 'XIII · Sin miedo'
+  },
+  14: {
+    content: `<p>Esta carta la dedico a los detalles. A los pequeños gestos que nadie anota pero que yo recuerdo. A los momentos que parecen simples pero que quedaron grabados en algún lugar sin pedirle permiso a nadie.</p>
+              <p>Cada uno vale más de lo que cabe en papel.</p>
+              <p>Pero lo intento igual.</p>`,
+    from: 'Quien piensa en ti',
+    song: 'music/carta_14.mp3',
+    songTitle: 'XIV · Los detalles'
+  },
+  15: {
+    content: `<p>Quince cartas y todavía hay cosas que no sé cómo decir.</p>
+              <p>Eso no me frustran. Al contrario. Me recuerda que lo que siento es más grande que las palabras disponibles.</p>
+              <p>Y eso, de alguna forma, es lo más bonito de todo.</p>`,
+    from: 'Quien piensa en ti',
+    song: 'music/carta_15.mp3',
+    songTitle: 'XV · Más que palabras'
+  },
+  16: {
+    content: `<p>Hay una imagen que guardé en algún rincón de la memoria y que de vez en cuando aparece sin que yo la invoque.</p>
+              <p>Una imagen tuya. No dramática, no especial para nadie más. Solo tú, en un momento ordinario, siendo exactamente quien eres.</p>
+              <p>Y eso, para mí, lo es todo.</p>`,
+    from: 'Quien piensa en ti',
+    song: 'music/carta_16.mp3',
+    songTitle: 'XVI · La imagen guardada'
+  },
+  17: {
+    content: `<p>Diecisiete. Un número sin simetría, sin redondez. Un número honesto.</p>
+              <p>Esta carta es honesta también. Sin adornos, sin metáforas. Solo esto: me alegra que existas.</p>
+              <p>Simple. Verdadero.</p>`,
+    from: 'Quien piensa en ti',
+    song: 'music/carta_17.mp3',
+    songTitle: 'XVII · Honestidad'
+  },
+  18: {
+    content: `<p>¿Alguna vez te has preguntado cómo te ve alguien que te admira en silencio? ¿Qué palabras usaría? ¿Qué colores te pondría?</p>
+              <p>Yo te pondría el color de la luz cuando acaba el día y el cielo no sabe todavía si oscurecerse o seguir brillando.</p>
+              <p>Ese momento entre dos cosas. Ese instante de todo posible.</p>`,
+    from: 'Quien piensa en ti',
+    song: 'music/carta_18.mp3',
+    songTitle: 'XVIII · El color de ti'
+  },
+  19: {
+    content: `<p>Ya casi. Cuatro más y habremos llegado al final de lo que planeé escribir.</p>
+              <p>Pero antes de llegar, esta carta para decirte que el camino valió. Que cada palabra escrita fue un momento en que pensé en ti con toda la atención de la que soy capaz.</p>
+              <p>Y eso, ya de por sí, fue un regalo para mí.</p>`,
+    from: 'Quien piensa en ti',
+    song: 'music/carta_19.mp3',
+    songTitle: 'XIX · Casi allí'
+  },
+  20: {
+    content: `<p>Veinte. Un número que suena a comienzo, aunque sea casi el final de estas cartas.</p>
+              <p>Porque así funciona esto que siento: siempre parece estar empezando. Siempre encuentra algo nuevo que sorprenderme, algo nuevo que admirar.</p>
+              <p>No termina. Solo cambia de forma.</p>`,
+    from: 'Quien piensa en ti',
+    song: 'music/carta_20.mp3',
+    songTitle: 'XX · Sin fin'
+  },
+  21: {
+    content: `<p>Tercer penúltima carta antes de la última. Qué extraño se siente esto.</p>
+              <p>Como cuando estás llegando al final de un libro que no quieres que termine y empiezas a leer más despacio para alargar el tiempo.</p>
+              <p>Ojalá tú también hayas querido alargar el tiempo aquí.</p>`,
+    from: 'Quien piensa en ti',
+    song: 'music/carta_21.mp3',
+    songTitle: 'XXI · Casi el final'
+  },
+  22: {
+    content: `<p>Penúltima. La carta que antecede a lo que quiero decir cuando ya no queden más hojas.</p>
+              <p>Solo quiero que sepas que todo lo escrito aquí es real. Que no es un juego, no es una fantasía, no es lo que crees que la gente dice para sonar bonito.</p>
+              <p>Es lo que hay. Lo que existe. Lo que soy cuando pienso en ti.</p>`,
+    from: 'Quien piensa en ti',
+    song: 'music/carta_22.mp3',
+    songTitle: 'XXII · La verdad'
+  },
+  23: {
+    content: `<p>Y llegamos. La última carta de veintitrés.</p>
+              <p>Podría intentar resumirlo todo aquí. Hacer un gran discurso final, una declaración memorable. Pero eso no sería honesto.</p>
+              <p>Lo honesto es esto: <em>Gracias</em>. Por existir. Por ser quien eres. Por haber llegado a este lugar donde alguien, en silencio, escribió veintitrés cartas solo para que supieras.</p>
+              <p>Solo para que supieras que importas. Profundamente. De formas que las palabras apenas rozan.</p>
+              <p>Con todo lo que tengo,</p>`,
+    from: 'Quien piensa en ti. Siempre.',
+    song: 'music/carta_23.mp3',
+    songTitle: 'XXIII · Fin y comienzo'
+  }
+};
+
+const ROMAN = ['I','II','III','IV','V','VI','VII','VIII','IX','X',
+               'XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX',
+               'XXI','XXII','XXIII'];
+
+// ── STORAGE ──
+const UNLOCK_KEY = 'carta_unlocked';
+const READ_KEY   = 'carta_read';
+function getUnlocked() { try { return JSON.parse(localStorage.getItem(UNLOCK_KEY))||[1]; } catch{return [1];} }
+function getRead()     { try { return JSON.parse(localStorage.getItem(READ_KEY))||[]; } catch{return [];} }
+function saveUnlocked(arr){ localStorage.setItem(UNLOCK_KEY, JSON.stringify(arr)); }
+function saveRead(arr)    { localStorage.setItem(READ_KEY, JSON.stringify(arr)); }
+
+// ── GET CARTA NUMBER ──
+const params = new URLSearchParams(window.location.search);
+const N = parseInt(params.get('n')) || 1;
+const unlocked = getUnlocked();
+
+if (!unlocked.includes(N)) {
+  window.location.href = 'menu.html';
+}
+
+// ── POPULATE CONTENT ──
+const data = LETTERS[N] || LETTERS[1];
+document.title = `Carta ${ROMAN[N-1]} · Para Ti`;
+document.getElementById('nav-num').textContent = `Carta ${ROMAN[N-1]}`;
+document.getElementById('letter-num-display').textContent = ROMAN[N-1];
+document.getElementById('letter-content').innerHTML = data.content;
+document.getElementById('letter-from').textContent = data.from;
+
+// Music
+
+
+// ── READING TIMER (60 seconds) ──
+const READ_TIME = 60; // seconds
+let elapsed = 0;
+let timerInterval = null;
+let timerDone = false;
+const read = getRead();
+const alreadyRead = read.includes(N);
+
+if (alreadyRead) {
+  // Already read — show unlock immediately
+  document.getElementById('timer-bar').style.width = '100%';
+  document.getElementById('timer-text').textContent = '✦ Carta leída';
+  document.getElementById('timer-label').textContent = 'Ya leíste esta carta';
+  timerDone = true;
+  if (N < 23) {
+    document.getElementById('unlock-btn').classList.add('show');
+    document.getElementById('nav-next').style.display = 'block';
+  } else {
+    document.getElementById('unlock-btn').style.display = 'none';
+    document.getElementById('timer-label').textContent = '✦ Has completado todas las cartas ✦';
+  }
+} else {
+  timerInterval = setInterval(() => {
+    elapsed++;
+    const pct = Math.min((elapsed / READ_TIME) * 100, 100);
+    document.getElementById('timer-bar').style.width = pct + '%';
+    const remaining = READ_TIME - elapsed;
+    if (remaining > 0) {
+      document.getElementById('timer-text').textContent = `Leyendo… ${remaining} segundos restantes`;
+    } else {
+      clearInterval(timerInterval);
+      document.getElementById('timer-text').textContent = '✦ Lista para continuar';
+      document.getElementById('timer-label').textContent = 'Has leído esta carta';
+      timerDone = true;
+      // Mark as read
+      const r = getRead();
+      if (!r.includes(N)) { r.push(N); saveRead(r); }
+      if (N < 23) {
+        document.getElementById('unlock-btn').classList.add('show');
+      } else {
+        document.getElementById('timer-label').textContent = '✦ Has completado todas las cartas ✦';
+      }
+    }
+  }, 1000);
+}
+
+// ── UNLOCK NEXT ──
+function unlockNext() {
+  if (!timerDone) return;
+  const u = getUnlocked();
+  if (!u.includes(N+1) && N < 23) { u.push(N+1); saveUnlocked(u); }
+  window.location.href = `carta.html?n=${N+1}`;
+}
+
+function goNext() { window.location.href = `carta.html?n=${N+1}`; }
+
+// Show nav next if already read and next unlocked
+if (alreadyRead && N < 23) document.getElementById('nav-next').style.display = 'block';
+
+// ── MUSIC ──
+document.getElementById('song-title').textContent = data.songTitle;
+
+// ── YOUTUBE AUDIO ──
+let ytPlayer = null;
+let playing = false;
+
+// Carga la API de YouTube una sola vez
+if (!window.YT) {
+  const tag = document.createElement('script');
+  tag.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(tag);
+}
+
+window.onYouTubeIframeAPIReady = function () {
+  ytPlayer = new YT.Player('yt-player', {
+    videoId: data.yt,
+    playerVars: { autoplay: 0, controls: 0 },
+    events: { onReady: () => { ytPlayer.setVolume(40); } }
+  });
+};
+
+// Si la API ya estaba cargada de antes
+if (window.YT && window.YT.Player) {
+  window.onYouTubeIframeAPIReady();
+}
+
+function toggleMusic() {
+  if (!ytPlayer) return;
+  const btn = document.getElementById('play-btn');
+  if (playing) { ytPlayer.pauseVideo(); btn.textContent = '▶'; playing = false; }
+  else         { ytPlayer.playVideo();  btn.textContent = '⏸'; playing = true; }
+}
+
+document.addEventListener('click', () => {
+  if (!playing && ytPlayer) {
+    ytPlayer.playVideo();
+    playing = true;
+    document.getElementById('play-btn').textContent = '⏸';
+  }
+}, { once: true });
+</script>
+</body>
+</html>
+
