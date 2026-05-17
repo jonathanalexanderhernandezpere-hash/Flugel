@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menú · Para Ti</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg:        #06040f;
+    --bg2:       #0e0820;
+    --gold:      #c9a84c;
+    --gold-l:    #f0d080;
+    --gold-d:    #8a6a20;
+    --ivory:     #f5edd8;
+    --burgundy:  #5c1a2e;
+    --sakura:    #e8829a;
+    --locked:    #2a2040;
+    --locked-b:  #3a3060;
+  }
+
+  body {
+    min-height: 100vh;
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse at 20% 0%, rgba(92,26,46,0.25) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 100%, rgba(50,20,80,0.3) 0%, transparent 50%),
+      repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(201,168,76,0.04) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(201,168,76,0.04) 40px);
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--ivory);
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  header {
+    text-align: center;
+    padding: 3rem 1rem 2rem;
+    position: relative;
+  }
+  header::after {
+    content: '';
+    display: block;
+    width: 60%; max-width: 500px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 1.5rem auto 0;
+  }
+  .back-btn {
+    position: absolute; left: 2rem; top: 3rem;
+    background: none; border: 1px solid var(--gold-d);
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s;
+    clip-path: polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);
+  }
+  .back-btn:hover { background: rgba(201,168,76,0.15); border-color: var(--gold); }
+  h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(1.5rem, 4vw, 2.8rem);
+    color: var(--gold-l);
+    letter-spacing: 0.2em;
+    text-shadow: 0 0 40px rgba(240,208,128,0.3);
+  }
+  .subtitle {
+    font-style: italic;
+    color: var(--sakura);
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+    opacity: 0.8;
+  }
+
+  /* ── CREST DIVIDER ── */
+  .crest {
+    text-align: center;
+    font-size: 1.8rem;
+    color: var(--gold);
+    opacity: 0.5;
+    margin: 0.5rem 0;
+  }
+
+  /* ── GRID ── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1.2rem;
+    max-width: 900px;
+    margin: 2rem auto 4rem;
+    padding: 0 2rem;
+  }
+
+  /* ── CARD ── */
+  .card {
+    aspect-ratio: 3/4;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform-style: preserve-3d;
+  }
+  .card:hover:not(.locked) { transform: translateY(-6px) scale(1.03); }
+  .card.locked { cursor: not-allowed; }
+  .card.locked:hover { transform: none; }
+
+  .card-inner {
+    width: 100%; height: 100%;
+    background: linear-gradient(145deg, #1a1030, #0e0820);
+    border: 1px solid var(--gold-d);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .card:not(.locked) .card-inner:hover {
+    border-color: var(--gold);
+    box-shadow: 0 0 20px rgba(201,168,76,0.25), inset 0 0 30px rgba(201,168,76,0.05);
+  }
+
+  /* Corner ornaments */
+  .card-inner::before, .card-inner::after {
+    content: '✦';
+    position: absolute;
+    font-size: 0.5rem;
+    color: var(--gold-d);
+    transition: color 0.3s;
+  }
+  .card-inner::before { top: 6px; left: 8px; }
+  .card-inner::after  { bottom: 6px; right: 8px; }
+  .card:not(.locked) .card-inner:hover::before,
+  .card:not(.locked) .card-inner:hover::after { color: var(--gold); }
+
+  /* Number */
+  .card-num {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 2.2rem;
+    color: var(--gold-l);
+    line-height: 1;
+    text-shadow: 0 0 20px rgba(240,208,128,0.4);
+    transition: text-shadow 0.3s;
+  }
+  .card:not(.locked) .card-inner:hover .card-num {
+    text-shadow: 0 0 30px rgba(240,208,128,0.8);
+  }
+
+  .card-divider {
+    width: 40px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-d), transparent);
+    margin: 0.4rem 0;
+    transition: background 0.3s;
+  }
+  .card:not(.locked) .card-inner:hover .card-divider {
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  .card-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+    color: var(--gold-d);
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .card:not(.locked) .card-inner:hover .card-label { color: var(--gold); }
+
+  /* Lock overlay */
+  .card.locked .card-inner {
+    background: linear-gradient(145deg, #0d0a1a, #080614);
+    border-color: var(--locked-b);
+  }
+  .card.locked .card-num { color: #3a3060; text-shadow: none; }
+  .card.locked .card-label { color: #2a2040; }
+  .card.locked .card-divider { background: linear-gradient(90deg, transparent, #2a2040, transparent); }
+
+  .lock-icon {
+    font-size: 1rem;
+    color: #3a3060;
+    margin-top: 0.3rem;
+    display: none;
+  }
+  .card.locked .lock-icon { display: block; }
+
+  /* Unlocked glow effect */
+  .card.unlocked .card-inner {
+    box-shadow: 0 0 8px rgba(201,168,76,0.1);
+  }
+
+  /* New badge */
+  .new-badge {
+    position: absolute;
+    top: -6px; right: -6px;
+    background: var(--sakura);
+    color: var(--bg);
+    font-family: 'Cinzel', serif;
+    font-size: 0.45rem;
+    letter-spacing: 0.1em;
+    padding: 2px 6px;
+    text-transform: uppercase;
+    display: none;
+  }
+  .card.just-unlocked .new-badge { display: block; animation: badgePop 0.5s ease; }
+  @keyframes badgePop { from{transform:scale(0)}to{transform:scale(1)} }
+
+  /* ── TOOLTIP ── */
+  .tooltip {
+    position: fixed;
+    background: rgba(6,4,15,0.95);
+    border: 1px solid var(--gold-d);
+    color: var(--ivory);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0;
+    transition: opacity 0.2s;
+    max-width: 200px;
+    text-align: center;
+    line-height: 1.4;
+  }
+  .tooltip.show { opacity: 1; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    border-top: 1px solid rgba(201,168,76,0.15);
+    color: var(--gold-d);
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+  }
+
+  /* ── SCROLL ORNAMENT ── */
+  .scroll-top { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem; }
+  .scroll-top::before, .scroll-top::after {
+    content: '';
+    height: 1px; width: 60px;
+    background: linear-gradient(90deg, transparent, var(--gold-d));
+  }
+  .scroll-top::after { background: linear-gradient(90deg, var(--gold-d), transparent); }
+
+  /* ── MUSIC ── */
+  #music-btn {
+    position: fixed; bottom: 2rem; right: 2rem; z-index: 20;
+    background: rgba(6,4,15,0.9);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-size: 1.2rem;
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s;
+  }
+  #music-btn:hover { background: rgba(201,168,76,0.15); }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="back-btn">← Volver</a>
+  <div class="crest">⚜</div>
+  <h1>Las Cartas</h1>
+  <p class="subtitle">Veintitrés mensajes guardados para ti</p>
+</header>
+
+<div class="grid" id="card-grid"></div>
+
+<footer>
+  <div class="scroll-top"><span>⚜</span></div>
+  <span>Lee cada carta con calma · La siguiente se abrirá al terminar</span>
+</footer>
+
+<div class="tooltip" id="tooltip"></div>
+<button id="music-btn" onclick="toggleMusic()" title="Música">♪</button>
+
+<div id="yt-player" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;"></div>
+<script src="https://www.youtube.com/iframe_api"></script>
+
+<script>
+const TOTAL = 23;
+const UNLOCK_KEY = 'carta_unlocked';
+const READ_KEY   = 'carta_read';
+
+// ── Load/save unlock state ──
+function getUnlocked() {
+  try { return JSON.parse(localStorage.getItem(UNLOCK_KEY)) || [1]; }
+  catch { return [1]; }
+}
+function saveUnlocked(arr) {
+  localStorage.setItem(UNLOCK_KEY, JSON.stringify(arr));
+}
+
+// ── Check if a carta was just read (passed 1 min timer) ──
+function getRead() {
+  try { return JSON.parse(localStorage.getItem(READ_KEY)) || []; }
+  catch { return []; }
+}
+
+// ── Build grid ──
+function buildGrid() {
+  const unlocked = getUnlocked();
+  const read     = getRead();
+  const grid     = document.getElementById('card-grid');
+  grid.innerHTML  = '';
+
+  for (let i = 1; i <= TOTAL; i++) {
+    const isUnlocked   = unlocked.includes(i);
+    const isRead       = read.includes(i);
+    const justUnlocked = isUnlocked && !read.includes(i-1) && i > 1 && unlocked.includes(i);
+
+    const card = document.createElement('div');
+    card.className = `card ${isUnlocked ? 'unlocked' : 'locked'}`;
+    if (justUnlocked && !isRead && i === Math.max(...unlocked)) card.classList.add('just-unlocked');
+
+    const roman = toRoman(i);
+    card.innerHTML = `
+      <div class="card-inner">
+        <span class="card-num">${roman}</span>
+        <div class="card-divider"></div>
+        <span class="card-label">${isUnlocked ? 'Carta' : '✦ ✦ ✦'}</span>
+        <span class="lock-icon">🔒</span>
+      </div>
+      <div class="new-badge">Nueva</div>
+    `;
+
+    if (isUnlocked) {
+      card.addEventListener('click', () => {
+        window.location.href = `carta.html?n=${i}`;
+      });
+      card.addEventListener('mouseenter', (e) => showTooltip(e, isRead ? `Carta ${i} · Leída` : `Carta ${i} · Sin leer`));
+      card.addEventListener('mouseleave', hideTooltip);
+      card.addEventListener('mousemove', moveTooltip);
+    } else {
+      card.addEventListener('mouseenter', (e) => showTooltip(e, `Lee la carta ${i-1} para desbloquear`));
+      card.addEventListener('mouseleave', hideTooltip);
+      card.addEventListener('mousemove', moveTooltip);
+    }
+
+    grid.appendChild(card);
+  }
+}
+
+// ── Roman numerals ──
+function toRoman(n) {
+  const vals = [10,9,5,4,1];
+  const syms = ['X','IX','V','IV','I'];
+  let result = '';
+  vals.forEach((v,i) => { while(n>=v){result+=syms[i];n-=v;} });
+  return result;
+}
+
+// ── Tooltip ──
+const tip = document.getElementById('tooltip');
+function showTooltip(e, text) { tip.textContent = text; tip.classList.add('show'); moveTooltip(e); }
+function hideTooltip() { tip.classList.remove('show'); }
+function moveTooltip(e) {
+  tip.style.left = (e.clientX + 12) + 'px';
+  tip.style.top  = (e.clientY - 30) + 'px';
+}
+
+// ── Music ──
+let ytPlayer = null;
+let playing = false;
+
+window.onYouTubeIframeAPIReady = function () {
+  ytPlayer = new YT.Player('yt-player', {
+    videoId: 'HCrJNiMmH88', // ← ID del vídeo de YouTube para el menú
+    playerVars: { autoplay: 0, controls: 0, loop: 1, playlist: 'HCrJNiMmH88' },
+    events: { onReady: () => { ytPlayer.setVolume(35); } }
+  });
+};
+
+function toggleMusic() {
+  if (!ytPlayer) return;
+  const btn = document.getElementById('music-btn');
+  if (playing) {
+    ytPlayer.pauseVideo();
+    btn.textContent = '♪';
+    playing = false;
+  } else {
+    ytPlayer.playVideo();
+    btn.textContent = '■';
+    playing = true;
+  }
+}
+
+document.addEventListener('click', () => {
+  if (!playing && ytPlayer) {
+    ytPlayer.playVideo();
+    playing = true;
+    document.getElementById('music-btn').textContent = '■';
+  }
+}, { once: true });
+buildGrid();
+</script>
+</body>
+</html>
+
